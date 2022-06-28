@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        ul {
+            list-style: none;
+        }
+        #smart-button-container {
+            position: fixed;
+            bottom: 0;
+            width: 100vw;
+        }
+        h3 {
+            padding: 0 100px;
+        }
+        .cart-list-header {
+            position: relative;
+        }
+        .cart-list-header::after {
+            content: "";
+            width: 100%;
+            border: 1px solid black;
+            display: block;
+            position: absolute;
+            bottom: 8px;
+            left: -16px;
+        }
+        .cart-list-header .col {
+            margin: none;
+            display: inline-block;
+            padding: 10px;
+            width: 20%;
+            overflow: hidden;
+            height: 30px;
+        }
+        .cart-list-header .col-s {
+            margin: none;
+            display: inline-block;
+            padding: 10px;
+            width: 10%;
+            overflow: hidden;
+            height: 30px;
+        }
+        .cart-list-item .col {
+            margin: none;
+            display: inline-block;
+            padding: 10px;
+            width: 20%;
+            overflow: hidden;
+            height: 200px;
+        }
+        .cart-list-item .col-s {
+            margin: none;
+            display: inline-block;
+            padding: 10px;
+            width: 10%;
+            overflow: hidden;
+            height: 200px;
+        }
+        .col > img {
+            display: inline-block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="cart">
+        <div>
+            <h3>Giỏ hàng của bạn</h3>
+        </div>
+        <div class="cart-items">
+            <ul class="cart-list">
+                <li class="cart-list-header">
+                    <div class="col">
+                        <span>Hình Minh Họa</span>
+                    </div>
+                    <div class="col">
+                        <span>Tên Sản Phẩm</span>
+                    </div>
+                    <div class="col-s">
+                        <span>Đơn giá</span>
+                    </div>
+                    <div class="col-s">
+                        <span>Số Lượng</span>
+                    </div>
+                    <div class="col-s">
+                        <span>Thành Tiền</span>
+                    </div>
+                    <div class="col-s">
+                        <span>Ghi Chú</span>
+                    </div>
+                </li>
+                <li class="cart-list-item">
+                    <div class="col">
+                        <img src="https://w.ladicdn.com/s750x850/5eba20cec21e1d0aeabe8133/9-20210317035437.jpg" alt="Hình ảnh máy Khoan">
+                    </div>
+                    <div class="col">
+                        <span>Máy Khoan cầm tay Hitachi, với bộ phụ kiện đi kèm</span>
+                    </div>
+                    <div class="col-s">
+                        <span>$29.99</span>
+                    </div>
+                    <div class="col-s">
+                        <span>1</span>
+                    </div>
+                    <div class="col-s">
+                        <span>$29.99</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="smart-button-container">
+        <div style="text-align: center;">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></script>
+    <script>
+      function initPayPalButton() {
+        paypal.Buttons({
+          style: {
+            shape: 'pill',
+            color: 'gold',
+            layout: 'vertical',
+            label: 'paypal',
+            
+          },
+  
+          createOrder: function(data, actions) {
+            return actions.order.create({
+              purchase_units: [{"amount":{"currency_code":"USD","value":29.99}}]
+            });
+          },
+  
+          onApprove: function(data, actions) {
+            return actions.order.capture().then(function(orderData) {
+              
+              // Full available details
+              console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+  
+              // Show a success message within this page, e.g.
+              const element = document.getElementById('paypal-button-container');
+              element.innerHTML = '';
+              element.innerHTML = '<h3>Thank you for your payment!</h3>';
+  
+              // Or go to another URL:  actions.redirect('thank_you.html');
+              
+            });
+          },
+  
+          onError: function(err) {
+            console.log(err);
+          }
+        }).render('#paypal-button-container');
+      }
+      initPayPalButton();
+    </script>
+</body>
+</html>
